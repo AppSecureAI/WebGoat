@@ -17,7 +17,9 @@ public class OpenRedirectRealRedirect {
 
   @GetMapping("/OpenRedirect/realRedirect")
   public ModelAndView real(@RequestParam("url") String url) {
-    // Intentionally vulnerable: no validation
-    return new ModelAndView("redirect:" + url);
+    if (url != null && url.startsWith("/") && !url.startsWith("//")) {
+      return new ModelAndView("redirect:" + url);
+    }
+    return new ModelAndView("redirect:/");
   }
 }
