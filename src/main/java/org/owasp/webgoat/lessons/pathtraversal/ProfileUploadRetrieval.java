@@ -99,6 +99,12 @@ public class ProfileUploadRetrieval implements AssignmentEndpoint {
       var id = request.getParameter("id");
       var catPicture =
           new File(catPicturesDirectory, (id == null ? RandomUtils.nextInt(1, 11) : id) + ".jpg");
+      String canonicalBase = catPicturesDirectory.getCanonicalPath();
+      String canonicalTarget = catPicture.getCanonicalPath();
+      if (!canonicalTarget.startsWith(canonicalBase + File.separator)) {
+        return ResponseEntity.badRequest()
+            .body("Illegal characters are not allowed in the query params");
+      }
 
       if (catPicture.getName().toLowerCase().contains("path-traversal-secret.jpg")) {
         return ResponseEntity.ok()
